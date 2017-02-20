@@ -31,15 +31,17 @@ sub[sub$rank[sub$player == "Baer"],]
 
 ## Graph of players when they joined
 
-ggplot(sub, aes(x = -1 * total_days)) + 
+ggplot(sub, aes(x = joined)) + 
   geom_histogram(binwidth = 1) + 
-  labs(title = "Days Since Player Registered on Subterfuge",
+  labs(title = "Dates Players Joined Subterfuge",
        subtitle = "Subterfuge data from 19 Feb 2017",
-       x = "Number of Days Since Registering",
+       x = "Date Joined",
        y = "Number of Players",
        caption = "note: Subterfuge was publicly released on 15 Oct 2015") +
-  xlim(-500, 0) +
-  annotate("segment", x = -475, xend = -475,
+  scale_x_date(date_breaks = "12 weeks",
+               limits = c(as.Date("2015-10-01"), Sys.Date())) +
+  annotate("segment", x = as.Date("2015-10-15"),
+           xend = as.Date("2015-10-15"),
            y = 0, yend = 380, color = "red") +
   theme_light()
 
@@ -71,7 +73,7 @@ ggplot(sub, aes(x = game_rate)) +
   scale_x_continuous(limits = c(0, 1.19)) +
   theme_light()
 
-ggsave(paste(Sys.Date(),"1CSub Games Weekly Rate per Player.png"))
+ggsave(paste(Sys.Date(),"1C Sub Games Weekly Rate per Player.png"))
 
 ## Distribution of Ratings
 
@@ -152,14 +154,13 @@ ggplot(filter(sub, total_days > days), aes(x = game_rate, y = rating)) +
   geom_smooth() +
   geom_smooth(method = "lm", color = "red") +
   scale_y_continuous(breaks = seq(0, 2000, 100)) +
-  xlim(0,2.3) +
+  xlim(0,2) +
   labs(title = "Individual Rating by Weekly Games Entered",
        subtitle = "Subterfuge data from: 2017-02-19",
        x = "Rate of Games Entered per Week", y = "Rating",
        caption = paste("note: minimum of", days, 
                        "days since joining.\n3 observations greater than 2.5 games per week removed.")) +
-  annotate("segment", x = 0, 
-           xend = 2.3, 
+  annotate("segment", x = 0, xend = 2, 
            y = 1200, yend = 1200, color = "purple") +
   theme_light()
 
@@ -174,10 +175,10 @@ ggplot(filter(sub, total_days > days), aes(x = game_rate, y = rating)) +
   geom_smooth() +
   geom_smooth(method = "lm", color = "red") +
   scale_y_continuous(breaks = seq(0, 2000, 100)) +
-  xlim(0,2.3) +
+  xlim(0,2) +
   labs(title = "Baer's Rating by Total Rated Games Entered",
        subtitle = "Subterfuge data from: 2017-02-19",
-       x = "Games Entered per Week", y = "Rating",
+       x = "Rate of Games Entered per Week", y = "Rating",
        caption = paste("note: minimum of", days, 
                        "days since joining.\n3 observations greater than 2.5 games per week removed.")) + 
   annotate("segment", x = sub$game_rate[sub$player == "Baer"], 
@@ -188,7 +189,7 @@ ggplot(filter(sub, total_days > days), aes(x = game_rate, y = rating)) +
   annotate("text", x = 1.8, 
            y = 1700, 
            label = "Baer", color = "darkblue", size = 7) +
-  annotate("segment", x = 0, xend = 2.3, 
+  annotate("segment", x = 0, xend = 2, 
            y = 1200, yend = 1200, color = "purple") +
   theme_light()
 
